@@ -15,5 +15,6 @@
  */
 /**
  * Reflection utils.
+ * mybatis中反射项目类
  */
 package org.apache.ibatis.reflection;

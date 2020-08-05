@@ -498,7 +498,9 @@ public abstract class AbstractSQL<T> {
   }
 
   private static class SQLStatement {
-
+    /**
+     * sql语句的类型
+     */
     public enum StatementType {
       DELETE, INSERT, SELECT, UPDATE
     }

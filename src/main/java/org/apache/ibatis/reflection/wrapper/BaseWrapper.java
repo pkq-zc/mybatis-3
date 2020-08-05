@@ -23,6 +23,7 @@ import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * ObjectWrapper基类,封住了部分公共方法和属性
  * @author Clinton Begin
  */
 public abstract class BaseWrapper implements ObjectWrapper {
@@ -34,6 +35,12 @@ public abstract class BaseWrapper implements ObjectWrapper {
     this.metaObject = metaObject;
   }
 
+  /**
+   * 处理集合
+   * @param prop
+   * @param object
+   * @return
+   */
   protected Object resolveCollection(PropertyTokenizer prop, Object object) {
     if ("".equals(prop.getName())) {
       return object;
@@ -42,14 +49,24 @@ public abstract class BaseWrapper implements ObjectWrapper {
     }
   }
 
+  /**
+   * 获取集合的值
+   * @param prop
+   * @param collection
+   * @return
+   */
   protected Object getCollectionValue(PropertyTokenizer prop, Object collection) {
     if (collection instanceof Map) {
+      //如果是Map,则index为key
       return ((Map) collection).get(prop.getIndex());
     } else {
+      //转化index为int
       int i = Integer.parseInt(prop.getIndex());
       if (collection instanceof List) {
+        //如果是List
         return ((List) collection).get(i);
       } else if (collection instanceof Object[]) {
+        //如果是数组
         return ((Object[]) collection)[i];
       } else if (collection instanceof char[]) {
         return ((char[]) collection)[i];
@@ -68,13 +85,21 @@ public abstract class BaseWrapper implements ObjectWrapper {
       } else if (collection instanceof short[]) {
         return ((short[]) collection)[i];
       } else {
+        //都不是则抛出异常
         throw new ReflectionException("The '" + prop.getName() + "' property of " + collection + " is not a List or Array.");
       }
     }
   }
 
+  /**
+   * 设置集合的值
+   * @param prop
+   * @param collection
+   * @param value
+   */
   protected void setCollectionValue(PropertyTokenizer prop, Object collection, Object value) {
     if (collection instanceof Map) {
+      //如果是Map
       ((Map) collection).put(prop.getIndex(), value);
     } else {
       int i = Integer.parseInt(prop.getIndex());
