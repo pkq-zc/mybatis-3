@@ -29,7 +29,7 @@ public class ScriptRunnerTest {
     config.setUsername("root");
     config.setPassword("pieceofbake");
     config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-    config.setJdbcUrl("jdbc:mysql://120.76.99.3:3306/test?characterEncoding=UTF-8&autoReconnect=true&useSSL=false");
+    config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&autoReconnect=true&useSSL=false");
     HikariDataSource dataSource = new HikariDataSource(config);
     Connection connection = dataSource.getConnection();
     connection.setAutoCommit(false);
