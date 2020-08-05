@@ -166,6 +166,7 @@ public class Reflector {
    * @param isAmbiguous 是否明确
    */
   private void addGetMethod(String name, Method method, boolean isAmbiguous) {
+    //将方法封装到执行器中
     MethodInvoker invoker = isAmbiguous
         ? new AmbiguousMethodInvoker(method, MessageFormat.format(
             "Illegal overloaded getter method with ambiguous type for property ''{0}'' in class ''{1}''. This breaks the JavaBeans specification and can cause unpredictable results.",
