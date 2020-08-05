@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * Field get属性执行器
  * @author Clinton Begin
  */
 public class GetFieldInvoker implements Invoker {
@@ -32,8 +33,10 @@ public class GetFieldInvoker implements Invoker {
   @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException {
     try {
+      //通过反射API直接调用
       return field.get(target);
     } catch (IllegalAccessException e) {
+      //如果无法访问
       if (Reflector.canControlMemberAccessible()) {
         field.setAccessible(true);
         return field.get(target);

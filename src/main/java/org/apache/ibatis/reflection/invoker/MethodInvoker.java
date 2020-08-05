@@ -21,10 +21,11 @@ import java.lang.reflect.Method;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * getter或者setter方法执行器
  * @author Clinton Begin
  */
 public class MethodInvoker implements Invoker {
-
+  //返回值或者参数的类型
   private final Class<?> type;
   private final Method method;
 
