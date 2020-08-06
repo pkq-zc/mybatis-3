@@ -29,6 +29,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 /**
  * 方便我们获取和设置对象的属性
+ * 实际上它不提供核心方法的实现,主要是调用内部的其他工具完成
  * @author Clinton Begin
  */
 public class MetaObject {
@@ -44,7 +45,9 @@ public class MetaObject {
     this.objectFactory = objectFactory;
     this.objectWrapperFactory = objectWrapperFactory;
     this.reflectorFactory = reflectorFactory;
-
+    /**
+     * 根据Object 类型创建合适的ObjectWrapper
+     */
     if (object instanceof ObjectWrapper) {
       this.objectWrapper = (ObjectWrapper) object;
     } else if (objectWrapperFactory.hasWrapperFor(object)) {
@@ -58,6 +61,14 @@ public class MetaObject {
     }
   }
 
+  /**
+   * 通过实例为该实例创建元对象类
+   * @param object 实例对象
+   * @param objectFactory 对象工厂
+   * @param objectWrapperFactory 包装对象工厂
+   * @param reflectorFactory 反射器工厂
+   * @return
+   */
   public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     if (object == null) {
       return SystemMetaObject.NULL_META_OBJECT;
@@ -110,6 +121,11 @@ public class MetaObject {
     return objectWrapper.hasGetter(name);
   }
 
+  /**
+   * 通过字符串获取值,该字符串支持 PropertyTokenizer
+   * @param name
+   * @return
+   */
   public Object getValue(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -124,6 +140,11 @@ public class MetaObject {
     }
   }
 
+  /**
+   * 通过字符串设置值,该字符串支持 PropertyTokenizer
+   * @param name
+   * @param value
+   */
   public void setValue(String name, Object value) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {

@@ -19,7 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * mybatis 默认的反射工厂类
+ * mybatis 默认的反射器创建工厂.
+ * 使用ConcurrentMap来缓存类的反射器,提高性能.
  */
 public class DefaultReflectorFactory implements ReflectorFactory {
   private boolean classCacheEnabled = true;

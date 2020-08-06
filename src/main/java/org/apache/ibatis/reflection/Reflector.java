@@ -68,6 +68,10 @@ public class Reflector {
 
   private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
+  /**
+   * 通过类信息创建该类的反射器
+   * @param clazz
+   */
   public Reflector(Class<?> clazz) {
     type = clazz;
     //添加默认的无参构造器

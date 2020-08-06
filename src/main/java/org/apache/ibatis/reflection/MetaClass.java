@@ -27,10 +27,11 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * 类的元信息,
+ * 内部主要干活的不是它,它只是提供一些方法,然后内容调用 reflectorFactory和reflector来完成
  * @author Clinton Begin
  */
 public class MetaClass {
-
   private final ReflectorFactory reflectorFactory;
   private final Reflector reflector;
 
@@ -39,15 +40,32 @@ public class MetaClass {
     this.reflector = reflectorFactory.findForClass(type);
   }
 
+  /**
+   * 获取type的MetaClass
+   * @param type
+   * @param reflectorFactory
+   * @return
+   */
   public static MetaClass forClass(Class<?> type, ReflectorFactory reflectorFactory) {
     return new MetaClass(type, reflectorFactory);
   }
 
+  /**
+   * 通过属性获取MetaClass
+   * @param name
+   * @return
+   */
   public MetaClass metaClassForProperty(String name) {
     Class<?> propType = reflector.getGetterType(name);
     return MetaClass.forClass(propType, reflectorFactory);
   }
 
+  /**
+   * 查找属性,返回能查找到的字符串
+   * 例如:user.name.first 如果搜索 user.name.one => user.name.
+   * @param name
+   * @return
+   */
   public String findProperty(String name) {
     StringBuilder prop = buildProperty(name, new StringBuilder());
     return prop.length() > 0 ? prop.toString() : null;
