@@ -18,13 +18,17 @@ package org.apache.ibatis.reflection.property;
 import java.util.Iterator;
 
 /**
- * 属性分析器
+ * 属性分析器,用来解析属性字符串中的属性
  * @author Clinton Begin
  */
 public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
+  //存属性
   private String name;
+  //存索引的名称
   private final String indexedName;
+  //如果是集合则存索引
   private String index;
+  //未解析完的后续内容
   private final String children;
 
   public PropertyTokenizer(String fullname) {

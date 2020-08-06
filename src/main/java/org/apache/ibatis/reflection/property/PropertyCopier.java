@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * 属性值复制工具
  * @author Clinton Begin
  */
 public final class PropertyCopier {
@@ -30,6 +31,7 @@ public final class PropertyCopier {
 
   public static void copyBeanProperties(Class<?> type, Object sourceBean, Object destinationBean) {
     Class<?> parent = type;
+    //从当前类一直复制到父类
     while (parent != null) {
       final Field[] fields = parent.getDeclaredFields();
       for (Field field : fields) {

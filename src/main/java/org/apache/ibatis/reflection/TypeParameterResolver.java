@@ -26,33 +26,36 @@ import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 
 /**
+ * 主要用来解析字段类型,方法返回值和参数类型
  * @author Iwao AVE!
  */
 public class TypeParameterResolver {
 
   /**
-   * Resolve field type.
+   * 解析字段类型
    *
    * @param field
-   *          the field
+   *          the field 字段
    * @param srcType
-   *          the src type
+   *          the src type 字段所属的对象的类型
    * @return The field type as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
   public static Type resolveFieldType(Field field, Type srcType) {
+    //获取字段的声明类型
     Type fieldType = field.getGenericType();
+    //获取该字段所属的类
     Class<?> declaringClass = field.getDeclaringClass();
     return resolveType(fieldType, srcType, declaringClass);
   }
 
   /**
-   * Resolve return type.
+   * 解析方法返回值类型
    *
    * @param method
-   *          the method
+   *          the method 方法
    * @param srcType
-   *          the src type
+   *          the src type 方法所属类型
    * @return The return type of the method as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
@@ -63,12 +66,12 @@ public class TypeParameterResolver {
   }
 
   /**
-   * Resolve param types.
+   * 解析方法参数类型
    *
    * @param method
-   *          the method
+   *          the method 方法
    * @param srcType
-   *          the src type
+   *          the src type 方法所属类型
    * @return The parameter types of the method as an array of {@link Type}s. If they have type parameters in the
    *         declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
@@ -83,6 +86,13 @@ public class TypeParameterResolver {
     return result;
   }
 
+  /**
+   * 解析类型
+   * @param type
+   * @param srcType
+   * @param declaringClass
+   * @return
+   */
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
     if (type instanceof TypeVariable) {
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
