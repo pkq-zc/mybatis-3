@@ -27,7 +27,8 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- * 存储mapper文件内容
+ * 建立Mapper接口的Class对象和MapperProxyFactory对象之间的关系,
+ * 其中MapperProxyFactory对象用于创建Mapper动态代理对象
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
@@ -41,6 +42,13 @@ public class MapperRegistry {
     this.config = config;
   }
 
+  /**
+   * 获取mapper
+   * @param type
+   * @param sqlSession
+   * @param <T>
+   * @return
+   */
   @SuppressWarnings("unchecked")
   public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
     final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
@@ -58,6 +66,11 @@ public class MapperRegistry {
     return knownMappers.containsKey(type);
   }
 
+  /**
+   * 添加mapper
+   * @param type
+   * @param <T>
+   */
   public <T> void addMapper(Class<T> type) {
     if (type.isInterface()) {
       if (hasMapper(type)) {

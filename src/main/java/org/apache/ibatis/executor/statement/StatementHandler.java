@@ -26,6 +26,7 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.session.ResultHandler;
 
 /**
+ * 封装了JDBC Statement操作
  * @author Clinton Begin
  */
 public interface StatementHandler {

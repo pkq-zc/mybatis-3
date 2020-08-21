@@ -24,6 +24,7 @@ import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.BatchResult;
 
 /**
+ * mybatis中主要的接口,通过这个接口可以执行sql,获取mapper和关联事务
  * The primary Java interface for working with MyBatis.
  * Through this interface you can execute commands, get mappers and manage transactions.
  *

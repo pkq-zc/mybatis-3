@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.buydeem.mapper.UserMapper">
+
+    <cache-ref namespace="com.buydeem.mapper.BookMapper"/>
+
+    <select id="getById" resultType="com.buydeem.model.User">
+        select * from t_user where id = #{id}
+    </select>
+</mapper>

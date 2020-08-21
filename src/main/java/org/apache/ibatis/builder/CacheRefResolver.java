@@ -18,6 +18,7 @@ package org.apache.ibatis.builder;
 import org.apache.ibatis.cache.Cache;
 
 /**
+ * cache-ref解析
  * @author Clinton Begin
  */
 public class CacheRefResolver {

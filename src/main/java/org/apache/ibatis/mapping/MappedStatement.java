@@ -29,6 +29,7 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 封装了对Mapper文件的描述
  * @author Clinton Begin
  */
 public final class MappedStatement {

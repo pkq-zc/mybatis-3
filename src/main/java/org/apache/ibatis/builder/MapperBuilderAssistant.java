@@ -50,11 +50,13 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * mapper构建助手
  * @author Clinton Begin
  */
 public class MapperBuilderAssistant extends BaseBuilder {
-
+  //mapper的namespace
   private String currentNamespace;
+  //存储mapper文件的地址
   private final String resource;
   private Cache currentCache;
   private boolean unresolvedCacheRef; // issue #676
@@ -103,14 +105,21 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return currentNamespace + "." + base;
   }
 
+  /**
+   * 解析cache-ref
+   * @param namespace 引用的cahce所在的mapper.xml中的命名空间
+   * @return
+   */
   public Cache useCacheRef(String namespace) {
     if (namespace == null) {
       throw new BuilderException("cache-ref element requires a namespace attribute.");
     }
     try {
       unresolvedCacheRef = true;
+      //如果获取不到cache
       Cache cache = configuration.getCache(namespace);
       if (cache == null) {
+        //可能引用的cache还未解析完成
         throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.");
       }
       currentCache = cache;
@@ -121,6 +130,17 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
   }
 
+  /**
+   *创建缓存对象
+   * @param typeClass 缓存的实现类
+   * @param evictionClass 缓存删除策略
+   * @param flushInterval 刷新时间
+   * @param size 缓存大小
+   * @param readWrite
+   * @param blocking
+   * @param props
+   * @return
+   */
   public Cache useNewCache(Class<? extends Cache> typeClass,
       Class<? extends Cache> evictionClass,
       Long flushInterval,
@@ -128,6 +148,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean readWrite,
       boolean blocking,
       Properties props) {
+    //创建一个缓存
     Cache cache = new CacheBuilder(currentNamespace)
         .implementation(valueOrDefault(typeClass, PerpetualCache.class))
         .addDecorator(valueOrDefault(evictionClass, LruCache.class))
@@ -137,6 +158,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .blocking(blocking)
         .properties(props)
         .build();
+    //将新创建的cache添加到 configuration中
     configuration.addCache(cache);
     currentCache = cache;
     return cache;

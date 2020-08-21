@@ -28,8 +28,14 @@
     </environment>
   </environments>
 
+  <databaseIdProvider type="DB_VENDOR">
+    <property name="SQL Server" value="sqlserver"/>
+    <property name="DB2" value="db2"/>
+    <property name="Oracle" value="oracle" />
+  </databaseIdProvider>
+
   <mappers>
+    <mapper class="com.buydeem.mapper.UserMapper"/>
     <mapper resource="com/buydeem/mapper/BookMapper.xml"/>
-<!--    <mapper class="com.buydeem.mapper.BookMapper"/>-->
   </mappers>
 </configuration>

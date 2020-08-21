@@ -48,6 +48,7 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 
 /**
+ * 主要用来解析XML内容,然后构建configuration中
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -134,7 +135,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       //typeHandlers
       typeHandlerElement(root.evalNode("typeHandlers"));
-      //解析mappers配置文件内容
+      //解析mappers配置文件内容 解析映射文件入口
       mapperElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
@@ -307,6 +308,10 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * setting内容
+   * @param props
+   */
   private void settingsElement(Properties props) {
     configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
     configuration.setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.valueOf(props.getProperty("autoMappingUnknownColumnBehavior", "NONE")));
@@ -461,10 +466,12 @@ public class XMLConfigBuilder extends BaseBuilder {
    * @throws Exception
    */
   private void mapperElement(XNode parent) throws Exception {
+    System.out.println(this.getClass().getSimpleName()+":解析mybatis-config.xml中的<mappers>节点");
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
-        //扫描package下面的内容
+        //扫描<package>下面的内容
         if ("package".equals(child.getName())) {
+          System.out.println(this.getClass().getSimpleName()+":解析package类型的节点");
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {
@@ -474,6 +481,7 @@ public class XMLConfigBuilder extends BaseBuilder {
           String mapperClass = child.getStringAttribute("class");
           //通过resource设置
           if (resource != null && url == null && mapperClass == null) {
+            System.out.println(this.getClass().getSimpleName()+":解析resource类型的节点");
             ErrorContext.instance().resource(resource);
             InputStream inputStream = Resources.getResourceAsStream(resource);
             //解析xml
@@ -481,12 +489,14 @@ public class XMLConfigBuilder extends BaseBuilder {
             mapperParser.parse();
             //通过url设置
           } else if (resource == null && url != null && mapperClass == null) {
+            System.out.println(this.getClass().getSimpleName()+":解析url类型的节点");
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, url, configuration.getSqlFragments());
             mapperParser.parse();
             //通过mapperClass设置
           } else if (resource == null && url == null && mapperClass != null) {
+            System.out.println(this.getClass().getSimpleName()+":解析mapperClass类型的节点");
             Class<?> mapperInterface = Resources.classForName(mapperClass);
             configuration.addMapper(mapperInterface);
           } else {

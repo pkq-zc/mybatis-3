@@ -1,3 +1,4 @@
+
 /**
  *    Copyright 2009-2020 the original author or authors.
  *
@@ -96,37 +97,60 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * mybatis配置类
  * @author Clinton Begin
  */
 public class Configuration {
 
   protected Environment environment;
-
+  //是否允许在嵌套语句中使用分页
   protected boolean safeRowBoundsEnabled;
+  //是否允许在签到语句中使用结果处理器
   protected boolean safeResultHandlerEnabled = true;
+  //是否自动开启驼峰映射
   protected boolean mapUnderscoreToCamelCase;
+  //开启时，任一方法的调用都会加载该对象的所有延迟加载属性
   protected boolean aggressiveLazyLoading;
+  //是否允许单个语句返回多结果集
   protected boolean multipleResultSetsEnabled = true;
+  //允许 JDBC 支持自动生成主键,需要数据库驱动支持
   protected boolean useGeneratedKeys;
+  //使用列标签代替列名
   protected boolean useColumnLabel = true;
+  //全局性地开启或关闭所有映射器配置文件中已配置的任何缓存
   protected boolean cacheEnabled = true;
+  //指定当结果集中值为 null 的时候是否调用映射对象的 setter（map 对象时为 put）方法，这在依赖于 Map.keySet() 或 null 值进行初始化时比较有用
   protected boolean callSettersOnNulls;
   protected boolean useActualParamName = true;
+  //当返回行的所有列都是空时,MyBatis默认返回 null
   protected boolean returnInstanceForEmptyRow;
+  //删除sql中的多余的空白
   protected boolean shrinkWhitespacesInSql;
-
+  //指定 MyBatis 增加到日志名称的前缀
   protected String logPrefix;
+  //指定 MyBatis 所用日志的具体实现
   protected Class<? extends Log> logImpl;
+  //指定 VFS 的实现
   protected Class<? extends VFS> vfsImpl;
+
   protected Class<?> defaultSqlProviderType;
+  //本地缓存的范围
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
+  //当没有为参数指定特定的 JDBC 类型时，空值的默认 JDBC 类型
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
+  //	指定对象的哪些方法触发一次延迟加载
   protected Set<String> lazyLoadTriggerMethods = new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString"));
+  //设置超时时间,它决定数据库驱动等待数据库响应的秒数
   protected Integer defaultStatementTimeout;
+  //为驱动的结果集获取数量（fetchSize）设置一个建议值
   protected Integer defaultFetchSize;
+
   protected ResultSetType defaultResultSetType;
+  //配置默认的执行器
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
+  //指定 MyBatis 应如何自动映射列到字段或属性
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
+  //发现自动映射目标未知列（或未知属性类型）的行为
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
 
   protected Properties variables = new Properties();
@@ -145,27 +169,39 @@ public class Configuration {
    * @see <a href='https://code.google.com/p/mybatis/issues/detail?id=300'>Issue 300 (google code)</a>
    */
   protected Class<?> configurationFactory;
-
+  //注册mapper接口信息
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+  //注册插件信息
   protected final InterceptorChain interceptorChain = new InterceptorChain();
+  //类型处理器注册表
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
+  //类型别名注册表
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+  //注册LanguageDriver,LanguageDriver用于解析sql配置
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
-
+  //注册mappedStatements
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection")
       .conflictMessageProducer((savedValue, targetValue) ->
           ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
+  //注册缓存相关信息
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
+  //用户注册mapper文件中<resultMap>节点相关信息
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
+  //用于注册Mapper中通过<parameterMap>标签注册的参数映射信息
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
+  //用于注册KeyGenerator
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
-  //用来记录已加载过的资源
+  //用于注册所有Mapper XML配置文件路径
   protected final Set<String> loadedResources = new HashSet<>();
+  //用于注册Mapper中通过<sql>标签配置的SQL片段
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
-
+  //用于注册解析出现异常的XMLStatementBuilder对象
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
+  //用于注册解析出现异常的CacheRefResolver对象
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
+  //用于注册解析出现异常的ResultMapResolver对象
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
+  //用于注册解析出现异常的MethodResolver对象
   protected final Collection<MethodResolver> incompleteMethods = new LinkedList<>();
 
   /*
@@ -664,10 +700,17 @@ public class Configuration {
     return newExecutor(transaction, defaultExecutorType);
   }
 
+  /**
+   * 创建Executor
+   * @param transaction 事务
+   * @param executorType executor类型
+   * @return
+   */
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
+    //根据传入的类型创建 Executor
     if (ExecutorType.BATCH == executorType) {
       executor = new BatchExecutor(this, transaction);
     } else if (ExecutorType.REUSE == executorType) {
@@ -675,9 +718,11 @@ public class Configuration {
     } else {
       executor = new SimpleExecutor(this, transaction);
     }
+    //如果缓存打开,则包装创建 CachingExecutor 包装类
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
     }
+    // todo 与插件相关
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
   }
@@ -860,6 +905,11 @@ public class Configuration {
     return mappedStatements.containsKey(statementName);
   }
 
+  /**
+   * 保存cache-ref引用关系
+   * @param namespace 当前mapper命名空间
+   * @param referencedNamespace 引用的cache的命名空间
+   */
   public void addCacheRef(String namespace, String referencedNamespace) {
     cacheRefMap.put(namespace, referencedNamespace);
   }

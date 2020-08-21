@@ -18,6 +18,7 @@ package org.apache.ibatis.session;
 import java.sql.Connection;
 
 /**
+ * 创建sqlSession的工厂类接口
  * Creates an {@link SqlSession} out of a connection or a DataSource
  *
  * @author Clinton Begin
